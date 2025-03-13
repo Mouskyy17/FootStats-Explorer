@@ -9,17 +9,20 @@ df = pd.read_csv("df_Big2025.csv")
 # Titre de l'application
 st.title("Analyse des performances des joueurs - Saison 24/25")
 
+# Sidebar pour les options
+st.sidebar.header("Options de personnalisation")
+
 # Sélection des statistiques
 stats = df.columns[4:]
-stat_x = st.selectbox("Choisissez la statistique pour l'axe X", stats, index=list(stats).index("Buts"))
-stat_y = st.selectbox("Choisissez la statistique pour l'axe Y", stats, index=list(stats).index("Passes decisives"))
+stat_x = st.sidebar.selectbox("Choisissez la statistique pour l'axe X", stats, index=list(stats).index("Buts"))
+stat_y = st.sidebar.selectbox("Choisissez la statistique pour l'axe Y", stats, index=list(stats).index("Passes decisives"))
 
 # Filtres
 df = df.dropna(subset=[stat_x, stat_y, "Minutes jouees", "Ligue", "Joueur"])
-min_minutes = st.slider("Nombre minimum de minutes jouées", min_value=0, max_value=int(df["Minutes jouees"].max()), value=500)
-leagues = st.multiselect("Sélectionnez les ligues", df["Ligue"].unique(), default=df["Ligue"].unique())
-num_labels = st.slider("Nombre de joueurs à afficher avec des étiquettes", min_value=0, max_value=20, value=5)
-label_size = st.slider("Taille du texte des étiquettes", min_value=6, max_value=20, value=10)
+min_minutes = st.sidebar.slider("Nombre minimum de minutes jouées", min_value=0, max_value=int(df["Minutes jouees"].max()), value=500)
+leagues = st.sidebar.multiselect("Sélectionnez les ligues", df["Ligue"].unique(), default=df["Ligue"].unique())
+num_labels = st.sidebar.slider("Nombre de joueurs à afficher avec des étiquettes", min_value=0, max_value=20, value=5)
+label_size = st.sidebar.slider("Taille du texte des étiquettes", min_value=6, max_value=20, value=10)
 
 # Filtrer les données
 df_filtered = df[(df["Minutes jouees"] >= min_minutes) & (df["Ligue"].isin(leagues))]
