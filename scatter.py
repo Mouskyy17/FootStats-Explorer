@@ -21,7 +21,7 @@ df = df.dropna(subset=[stat_x, stat_y, "Minutes jouees", "Ligue", "Joueur", "Pos
 min_minutes = st.sidebar.slider("Nombre minimum de minutes jouées", min_value=0, max_value=int(df["Minutes jouees"].max()), value=500)
 leagues = st.sidebar.multiselect("Sélectionnez les ligues", df["Ligue"].unique(), default=df["Ligue"].unique())
 positions = st.sidebar.multiselect("Sélectionnez les positions", df["Position"].unique(), default=df["Position"].unique())
-num_players = st.sidebar.slider("Nombre de joueurs à considérer sur le graphique", min_value=10, max_value=50, value=20)
+num_players = st.sidebar.slider("Nombre de joueurs à considérer sur le graphique", min_value=10, max_value=len(df), value=50)
 num_labels = st.sidebar.slider("Nombre de joueurs à afficher avec des étiquettes", min_value=0, max_value=20, value=5)
 label_size = st.sidebar.slider("Taille du texte des étiquettes", min_value=6, max_value=20, value=10)
 
@@ -34,13 +34,13 @@ st.subheader(f"{stat_y} vs {stat_x}")
 fig = px.scatter(df_filtered, x=stat_x, y=stat_y, size="Minutes jouees", color="Ligue", hover_data=["Joueur", "Equipe"])
 st.plotly_chart(fig)
 
-# Histogrammes avec Plotly
+# Histogrammes avec noms des joueurs
 st.subheader(f"Distribution de {stat_x}")
-fig_x = px.histogram(df_filtered, x=stat_x, nbins=20)
+fig_x = px.histogram(df_filtered, x=stat_x, nbins=20, text_auto=True, hover_data=["Joueur"])
 st.plotly_chart(fig_x)
 
 st.subheader(f"Distribution de {stat_y}")
-fig_y = px.histogram(df_filtered, x=stat_y, nbins=20)
+fig_y = px.histogram(df_filtered, x=stat_y, nbins=20, text_auto=True, hover_data=["Joueur"])
 st.plotly_chart(fig_y)
 
 # Top 5 joueurs pour chaque statistique
