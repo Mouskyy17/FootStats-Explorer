@@ -6,7 +6,7 @@ import plotly.express as px
 df = pd.read_csv("df_Big2025.csv")
 
 # Titre de l'application
-st.title("Analyse des performances des joueurs - Saison 24/25")
+st.title("FootStats Explorer - Saison 24/25")
 
 # Sidebar pour les options
 st.sidebar.header("Options de personnalisation")
