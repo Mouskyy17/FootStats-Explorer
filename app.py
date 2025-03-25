@@ -318,10 +318,8 @@ def main():
         position = player1['Position']
         features = position_config[position]['features']
     
-        # Normalisation des valeurs sur 100
-        max_values = df[features].max()  # On utilise le max du dataset complet
-        player1_data = [(player1[feat] / max_values[feat]) * 100 for feat in features]
-        player2_data = [(player2[feat] / max_values[feat]) * 100 for feat in features]
+        player1_data = [player1[feat] for feat in features]
+        player2_data = [player2[feat] for feat in features]
 
         # Configuration du radar
         radar = Radar(
@@ -352,7 +350,7 @@ def main():
         st.markdown("### 📊 Profil comparé (par 90 minutes)")
         #st.plotly_chart(fig, use_container_width=True)
         # Ajustement de la mise en page
-        plt.tight_layout(pad=3.0)
+        plt.tight_layout()
         # Affichage du radar dans Streamlit
         st.pyplot(fig)
 
