@@ -18,52 +18,32 @@ stat_y = st.sidebar.selectbox("Choisissez la statistique pour l'axe Y", stats, i
 
 # Filtres
 df = df.dropna(subset=[stat_x, stat_y, "Minutes jouees", "Ligue", "Joueur", "Position"])
-min_minutes = st.sidebar.slider("Nombre minimum de minutes jouées", 0, int(df["Minutes jouees"].max()), 500)
+min_minutes = st.sidebar.slider("Nombre minimum de minutes jouées", min_value=0, max_value=int(df["Minutes jouees"].max()), value=500)
 leagues = st.sidebar.multiselect("Sélectionnez les ligues", df["Ligue"].unique(), default=df["Ligue"].unique())
 positions = st.sidebar.multiselect("Sélectionnez les positions", df["Position"].unique(), default=df["Position"].unique())
-num_players = st.sidebar.slider("Nombre de joueurs à considérer sur le graphique", 10, len(df), 50)
-num_labels = st.sidebar.slider("Nombre de joueurs à afficher avec des étiquettes", 0, 20, 5)
-label_size = st.sidebar.slider("Taille du texte des étiquettes", 6, 20, 10)
+num_players = st.sidebar.slider("Nombre de joueurs à considérer sur le graphique", min_value=10, max_value=len(df), value=50)
+num_labels = st.sidebar.slider("Nombre de joueurs à afficher avec des étiquettes", min_value=0, max_value=20, value=5)
+label_size = st.sidebar.slider("Taille du texte des étiquettes", min_value=6, max_value=20, value=10)
 
 # Filtrer les données
 df_filtered = df[(df["Minutes jouees"] >= min_minutes) & (df["Ligue"].isin(leagues)) & (df["Position"].isin(positions))]
 df_filtered = df_filtered.nlargest(num_players, stat_x)
 
-# Création du scatter plot amélioré
+# Création du scatter plot avec Plotly
 st.subheader(f"{stat_y} vs {stat_x}")
-fig = px.scatter(
-    df_filtered, x=stat_x, y=stat_y, size="Minutes jouees", color="Ligue",
-    hover_data=["Joueur", "Equipe"], opacity=0.7,
-    color_discrete_sequence=px.colors.qualitative.Set1
-)
-
-# Ajout d'annotations pour les meilleurs joueurs
-for i, row in df_filtered.nlargest(num_labels, stat_x).iterrows():
-    fig.add_annotation(
-        x=row[stat_x], y=row[stat_y], text=row["Joueur"],
-        showarrow=True, arrowhead=2, font=dict(size=label_size)
-    )
-
+fig = px.scatter(df_filtered, x=stat_x, y=stat_y, size="Minutes jouees", color="Ligue", hover_data=["Joueur", "Equipe"])
 st.plotly_chart(fig)
 
-# Vérifier la présence de la colonne "Joueur"
-hover_columns = ["Joueur"] if "Joueur" in df_filtered.columns else []
-
+# Histogrammes avec noms des joueurs
 st.subheader(f"Distribution de {stat_x}")
-fig_x = px.histogram(
-    df_filtered, x=stat_x, nbins=20, text_auto=True, hover_data=hover_columns
-)
-fig_x.add_vline(x=df_filtered[stat_x].median(), line_dash="dash", line_color="red", annotation_text="Médiane")
+fig_x = px.histogram(df_filtered, x=stat_x, nbins=20, text_auto=True, hover_data=["Joueur"])
 st.plotly_chart(fig_x)
 
 st.subheader(f"Distribution de {stat_y}")
-fig_y = px.histogram(
-    df_filtered, x=stat_y, nbins=20, text_auto=True, hover_data=hover_columns
-)
-fig_y.add_vline(x=df_filtered[stat_y].median(), line_dash="dash", line_color="red", annotation_text="Médiane")
+fig_y = px.histogram(df_filtered, x=stat_y, nbins=20, text_auto=True, hover_data=["Joueur"])
 st.plotly_chart(fig_y)
 
-# Top 5 joueurs
+# Top 5 joueurs pour chaque statistique
 st.subheader(f"Top 5 joueurs pour {stat_x}")
 st.write(df_filtered.nlargest(5, stat_x)[["Joueur", "Equipe", "Ligue", stat_x]])
 
