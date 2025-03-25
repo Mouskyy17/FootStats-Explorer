@@ -46,14 +46,20 @@ for i, row in df_filtered.nlargest(num_labels, stat_x).iterrows():
 
 st.plotly_chart(fig)
 
-# Histogrammes améliorés
+# Vérifier la présence de la colonne "Joueur"
+hover_columns = ["Joueur"] if "Joueur" in df_filtered.columns else []
+
 st.subheader(f"Distribution de {stat_x}")
-fig_x = px.histogram(df_filtered, x=stat_x, nbins=20, text_auto=True, hover_data=["Joueur"], orientation='h')
+fig_x = px.histogram(
+    df_filtered, x=stat_x, nbins=20, text_auto=True, hover_data=hover_columns
+)
 fig_x.add_vline(x=df_filtered[stat_x].median(), line_dash="dash", line_color="red", annotation_text="Médiane")
 st.plotly_chart(fig_x)
 
 st.subheader(f"Distribution de {stat_y}")
-fig_y = px.histogram(df_filtered, x=stat_y, nbins=20, text_auto=True, hover_data=["Joueur"], orientation='h')
+fig_y = px.histogram(
+    df_filtered, x=stat_y, nbins=20, text_auto=True, hover_data=hover_columns
+)
 fig_y.add_vline(x=df_filtered[stat_y].median(), line_dash="dash", line_color="red", annotation_text="Médiane")
 st.plotly_chart(fig_y)
 
