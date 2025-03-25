@@ -346,7 +346,7 @@ def main():
             alphas=[0.55, 0.5],
             compare=True,
         )
-        fig.set_size_inches(8, 8)
+        #fig.set_size_inches(8, 8)
 
         # Affichage du radar
         st.markdown("### 📊 Profil comparé (par 90 minutes)")
