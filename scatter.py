@@ -31,7 +31,7 @@ df_filtered = df_filtered.nlargest(num_players, stat_x)
 
 # Création du scatter plot avec couleurs foncées et points plus petits
 st.subheader(f"{stat_y} vs {stat_x}")
-fig = px.scatter(df_filtered, x=stat_x, y=stat_y, color="Ligue", hover_data=["Joueur", "Equipe"],
+fig = px.scatter(df_filtered, x=stat_x, y=stat_y, color="Ligue", 
                  size_max=10, opacity=0.8, color_discrete_sequence=px.colors.qualitative.Dark24)
 
 # Ajouter des étiquettes aux 10-12 meilleurs points
