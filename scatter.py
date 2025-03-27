@@ -37,7 +37,7 @@ fig = px.scatter(df_filtered, x=stat_x, y=stat_y, color="Ligue", hover_data=["Jo
 # Ajouter des étiquettes aux 10-12 meilleurs points
 top_labels = df_filtered.nlargest(num_labels, [stat_x, stat_y])
 for i, row in top_labels.iterrows():
-    fig.add_annotation(x=row[stat_x], y=row[stat_y], text=row["Joueur"],
+    fig.add_annotation(x=row[stat_x], y=row[stat_y] + (row[stat_y] * 0.02), text=row["Joueur"],
                        showarrow=False, font=dict(size=label_size))
 
 st.plotly_chart(fig)
