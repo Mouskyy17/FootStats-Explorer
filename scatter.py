@@ -34,18 +34,11 @@ st.subheader(f"{stat_y} vs {stat_x}")
 fig = px.scatter(df_filtered, x=stat_x, y=stat_y, color="Ligue", hover_data=["Joueur", "Equipe"],
                  size_max=10, opacity=0.8, color_discrete_sequence=px.colors.qualitative.Dark24)
 
-# Ajouter des étiquettes aux 10-12 meilleurs points sans chevauchement
+# Ajouter des étiquettes aux 10-12 meilleurs points
 top_labels = df_filtered.nlargest(num_labels, [stat_x, stat_y])
 for i, row in top_labels.iterrows():
-    fig.add_annotation(
-        x=row[stat_x], 
-        y=row[stat_y] + (row[stat_y] * 0.05),  # Décalage plus important
-        text=row["Joueur"],
-        showarrow=False,
-        font=dict(size=label_size),
-        bgcolor="rgba(255, 255, 255, 0.7)",  # Fond semi-transparent pour lisibilité
-        bordercolor="black",  # Bordure pour améliorer la visibilité
-    )
+    fig.add_annotation(x=row[stat_x], y=row[stat_y] + (row[stat_y] * 0.02), text=row["Joueur"],
+                       showarrow=False, font=dict(size=label_size))
 
 st.plotly_chart(fig)
 
