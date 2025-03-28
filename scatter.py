@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import random
 
 # Charger les données
 df = pd.read_csv("df_Big2025.csv")
@@ -35,17 +36,16 @@ st.subheader(f"{stat_y} vs {stat_x}")
 fig = px.scatter(df_filtered, x=stat_x, y=stat_y, color="Ligue", hover_data=["Joueur", "Equipe"],
                  size_max=10, opacity=0.8, color_discrete_sequence=px.colors.qualitative.Dark24)
 
-# Ajouter des étiquettes aux 10-12 meilleurs points avec espacement
-top_labels = df_filtered.nlargest(num_labels, [stat_x, stat_y])
-for i, row in top_labels.iterrows():
+# Sélectionner aléatoirement 10 joueurs parmi les points affichés
+selected_labels = df_filtered.sample(n=min(num_labels, len(df_filtered)), random_state=42)
+for i, row in selected_labels.iterrows():
     fig.add_annotation(
         x=row[stat_x], 
         y=row[stat_y] + (row[stat_y] * 0.08),  # Décalage augmenté pour éviter confusion
         text=row["Joueur"],
         showarrow=False,
         font=dict(size=label_size),
-        bgcolor="rgba(255, 255, 255, 0.7)",  # Fond semi-transparent pour lisibilité
-        bordercolor="black",  # Bordure pour améliorer la visibilité
+       # bgcolor="rgba(255, 255, 255, 0.7)",  # Fond semi-transparent pour lisibilité
     )
 
 st.plotly_chart(fig)
