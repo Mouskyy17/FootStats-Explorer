@@ -12,7 +12,8 @@ st.title("FootStats Explorer - Saison 24/25")
 st.sidebar.header("Options de personnalisation")
 
 # Sélection des statistiques
-stats = df.columns[4:]
+excluded_columns = ["Position", "Ligue"]
+stats = [col for col in df.columns[4:] if col not in excluded_columns]
 stat_x = st.sidebar.selectbox("Choisissez la statistique pour l'axe X", stats, index=list(stats).index("Buts"))
 stat_y = st.sidebar.selectbox("Choisissez la statistique pour l'axe Y", stats, index=list(stats).index("Passes decisives"))
 
@@ -34,11 +35,18 @@ st.subheader(f"{stat_y} vs {stat_x}")
 fig = px.scatter(df_filtered, x=stat_x, y=stat_y, color="Ligue", hover_data=["Joueur", "Equipe"],
                  size_max=10, opacity=0.8, color_discrete_sequence=px.colors.qualitative.Dark24)
 
-# Ajouter des étiquettes aux 10-12 meilleurs points
+# Ajouter des étiquettes aux 10-12 meilleurs points avec espacement
 top_labels = df_filtered.nlargest(num_labels, [stat_x, stat_y])
 for i, row in top_labels.iterrows():
-    fig.add_annotation(x=row[stat_x], y=row[stat_y] + (row[stat_y] * 0.02), text=row["Joueur"],
-                       showarrow=False, font=dict(size=label_size))
+    fig.add_annotation(
+        x=row[stat_x], 
+        y=row[stat_y] + (row[stat_y] * 0.08),  # Décalage augmenté pour éviter confusion
+        text=row["Joueur"],
+        showarrow=False,
+        font=dict(size=label_size),
+        bgcolor="rgba(255, 255, 255, 0.7)",  # Fond semi-transparent pour lisibilité
+        bordercolor="black",  # Bordure pour améliorer la visibilité
+    )
 
 st.plotly_chart(fig)
 
