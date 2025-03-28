@@ -44,8 +44,8 @@ for i, row in top_labels.iterrows():
         text=row["Joueur"],
         showarrow=False,
         font=dict(size=label_size),
-        bgcolor="rgba(255, 255, 255, 0.7)",  # Fond semi-transparent pour lisibilité
-       # bordercolor="black",  # Bordure pour améliorer la visibilité
+        #bgcolor="rgba(255, 255, 255, 0.7)",  # Fond semi-transparent pour lisibilité
+        bordercolor="black",  # Bordure pour améliorer la visibilité
     )
 
 st.plotly_chart(fig)
